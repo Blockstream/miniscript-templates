@@ -1,5 +1,5 @@
 <pre>
-  Miniscript Template: 0
+  MinT: 000
   Title: Proposed Timelock Usage
   Created: 2023-09-11
 </pre>
@@ -68,7 +68,7 @@ Background:
 
 * The maximum value for a relative epoch timelock is older(4259839) which is 65,535 unit timelock, resulting in 33,554,431 seconds, or 388 days.
 
-* The 512 second incrementor is a common multiple for the amount of seconds in 4 days, which is 675 units. To encourage intuitive useage of relative timelocks, they should be multiples of 675.
+* The 512 second incrementor is a common multiple for the amount of seconds in 4 days, which is 675 units. To encourage intuitive usage of relative timelocks, they should be multiples of 675.
 , an exception should be made for the largest possible epoch timestamp relative timelock.
 
 '''Proposal''': Starting at 4194304, increment by 675 (4 days), for relative epochtime timelocks, the maximum value being 4259839.
@@ -81,3 +81,5 @@ Propsoed Examples of valid Epoch Timestamp Absolute Timelocks
 *older(4224679) 180 days
 *older(4255729) 364 days
 *older(4259839) 388 days, maximum value
+
+

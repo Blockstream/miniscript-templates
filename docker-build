@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#
+for f in $(ls **.mediawiki || true)
+do
+    command -v docker >/dev/null && docker run --rm --volume "`pwd`:/data" --user `id -u`:`id -g` pandoc/latex:2.6 --preserve-tabs --ascii --from=mediawiki --to=markdown $f | sed 's/__NOTOC__//' > $(sed 's/mediawiki/md/g' <<< $f) || echo "install docker"
+done
+
+for f in $(ls **.md || true)
+do
+    command -v docker >/dev/null && docker run --rm --volume "`pwd`:/data" --user `id -u`:`id -g` pandoc/latex:2.6 --preserve-tabs --ascii --from=markdown --to=html $f | sed 's/__NOTOC__//' > $(sed 's/md/html/g' <<< $f) || echo "install docker"
+done
+for f in $(ls README.md || true)
+do
+    command -v docker >/dev/null && docker run --rm --volume "`pwd`:/data" --user `id -u`:`id -g` pandoc/latex:2.6 --preserve-tabs --ascii --from=markdown --to=html $f | sed 's/__NOTOC__//' > $(sed 's/md/html/g' <<< $f) || echo "install docker"
+    cp readme.html index.html
+done

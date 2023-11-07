@@ -1,6 +1,8 @@
-Miniscript Template: 1
-Title: 3 Key Time Layered Multisig
-Created: 2023-09-11
+<pre>
+  MinT: 001
+  Title: 3 Key Time Layered Multisig
+  Created: 2023-09-11
+</pre>
 
 =Name of Template=
 
@@ -61,3 +63,5 @@ Below is a reference diagram on how the 3 Key Time Layered Multisig operates acr
 [https://mempool.space/testnet/tx/1a9ba5a5a37a0df72dfbc28f57de89ce35bda1819afa73712bc29caa32164687 Reference Testnet Transaction]
 
 (Future Addition: Taproot-based keyset for Minitapscript once integrated into Core)
+
+

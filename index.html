@@ -1,0 +1,82 @@
+<p><a href="https://github.com/Blockstream/miniscript-templates"><img src="https://avatars.githubusercontent.com/u/7424983?s=15" alt="miniscript templates (MinT)" /> <strong>miniscript-templates</strong></a></p>
+<center>
+<table>
+<thead>
+<tr class="header">
+<th><a href="MinT-000.html">MinT-000</a></th>
+<th><a href="MinT-001.html">MinT-001</a></th>
+<th><a href="MinT-002.html">MinT-002</a></th>
+<th><a href="MinT-003.html">MinT-003</a></th>
+<th><a href="MinT-004.html">MinT-004</a></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th><a href="MinT-999.html">MinT-999</a></th>
+<th><a href="MinTT-999.html">MinTT-999</a></th>
+<th><a href="MinTT-9999.html">MinTT-9999</a></th>
+<th><a href="MinTT-9999.html">MinTT-9999</a></th>
+<th><a href="MinTT-9999.html">MinTT-9999</a></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</center>
+<h2 id="about">About</h2>
+<p><a href="https://bitcoin.sipa.be/miniscript/">Miniscript</a> is a language for composing Bitcoin <a href="https://en.bitcoin.it/wiki/Script">Script</a> in a structured way, facilitating analysis, composition, and generic signing. It's a simplified, composable subset of the Bitcoin <a href="https://en.bitcoin.it/wiki/Script">Script</a> language. Developed to overcome limitations in writing complex spending conditions directly in Bitcoin <a href="https://en.bitcoin.it/wiki/Script">Script</a>, it enables formal verification and offers a more human-friendly interface.</p>
+<h2 id="objective">Objective</h2>
+<ol type="1">
+<li>Each MinT provides an example of a common miniscript implementation.</li>
+<li><p>Each MinT is provided as is. While care is taken to ensure a high degree of quality. Developers and enthusiasts assume full responsibility for their usage[^use-at-your-own-risk].</p></li>
+<li><p>Have reviewed templates that leverage Miniscript to assure there are not unintended ways of executing a valid spend beyond the intended <a href="https://raw.githubusercontent.com/bitcoin/bitcoin/master/src/script/miniscript.h">Miniscript</a> policy.</p></li>
+<li><p>Have standardized usages of Miniscript to streamline software and hardware wallet integrations.</p></li>
+<li><p>Have uniform on-chain usage of Miniscript templates for better privacy.</p></li>
+</ol>
+<H2>
+<p>Submission Format</p>
+</H2>
+<h3 id="name-of-template">Name of Template</h3>
+<p>Proposed Timelock Usage</p>
+<h3 id="goal-to-be-achieved-by-template">Goal to be achieved by template</h3>
+<p>A 3-of-3 that turns into a 2-of-3 after 90 days</p>
+<p><code>   NOTE: 144 blocks per day x 90 days = 12960 blocks</code></p>
+<h3 id="miniscript-policy">Miniscript Policy</h3>
+<p>Input:</p>
+<pre><code>thresh(3, pk(key_1), pk(key_2), pk(key_3), older(12960))</code></pre>
+<p>Output:</p>
+<pre><code>thresh(3, pk(key_1), s:pk(key_2), s:pk(key_3), sln:older(12960))
+
+Spending cost analysis
+
+Script: 122 WU
+Input: 166.250000 WU
+Total: 288.250000 WU</code></pre>
+<h4>
+<p>Resulting Bitcoin Script structure</p>
+</h4>
+<pre><code>&lt;key_1&gt; OP_CHECKSIG OP_SWAP &lt;key_2&gt; OP_CHECKSIG OP_ADD OP_SWAP &lt;key_3&gt;
+OP_CHECKSIG OP_ADD OP_SWAP OP_IF
+  0
+OP_ELSE
+  &lt;a032&gt; OP_CHECKSEQUENCEVERIFY OP_0NOTEQUAL
+OP_ENDIF
+OP_ADD 3 OP_EQUAL</code></pre>
+<p><a href="https://mempool.space/testnet/tx/13a204ec065f76878ee1f59f79b3eb2cea2b3fda4d8938e6cfa6a8394d090769">testnet tx</a></p>
+<p><code>   </code><a href="https://mempool.space/testnet/tx/13a204ec065f76878ee1f59f79b3eb2cea2b3fda4d8938e6cfa6a8394d090769"><code>https://mempool.space/testnet/tx/13a204ec065f76878ee1f59f79b3eb2cea2b3fda4d8938e6cfa6a8394d090769</code></a></p>
+<h3 id="additional-links">Additional Links</h3>
+<p><a href="https://github.com/sipa/miniscript/blob/master/bitcoin/script/miniscript.h">usage example</a></p>
+<h3 id="additional-resources">Additional Resources</h3>
+<p><a href="https://github.com/sipa/miniscript/tree/master">github.com/sipa/miniscript/tree/master</a></p>
+<p><a href="https://bitcoin.sipa.be/miniscript">bitcoin.sipa.be/miniscript</a></p>
+<details>
+<summary>Additional Links</summary>
+<p>
+<h4 id="blockstreamminiscript-templates">Blockstream/miniscript-templates:</h4>
+<p><a href="https://github.com/Blockstream/miniscript-templates"><img src="https://avatars.githubusercontent.com/u/7424983?s=100" alt="Additional Link" /></a></p>
+</p>
+</details>

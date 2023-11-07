@@ -1,0 +1,10 @@
+[submodule "docker"]
+	path = docker
+	url = https://github.com/bitcoincore-dev/miniscript-docker.git
+    ignore = dirty
+    depth = shallow
+[submodule "wiki"]
+	path = wiki
+    url = git@github.com:bitcoincore-dev/miniscript-templates.wiki.git
+    ignore = dirty
+    depth = shallow
