@@ -1,0 +1,22 @@
+=Table of Contents=
+{| class="wikitable sortable" style="width: auto; text-align: center; font-size: smaller; table-layout: fixed;"
+!Number
+!Title
+!Author
+!Co-Author
+!Created
+!Updated
+!Version
+!Status
+|- style="background-color: #ffcfcf"
+| [[Miniscript-Template-000-Timelocks-in-Templates.mediawiki|000]]
+| Timelocks-in-Templates
+| Rob Hamilton rob@anchorwatch.com
+| Rob Hamilton rob@anchorwatch.com
+| 2023-09-11
+| 2023-09-11
+| v0.0.1
+| Active
+|}
+
+__NOTOC__

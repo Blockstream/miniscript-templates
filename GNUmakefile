@@ -71,7 +71,8 @@ MinT-000 \
 MinT-001 \
 MinT-002 \
 MinT-003 \
-MinT-004
+MinT-004 \
+TOC.mediawiki
 
 .PHONY:-
 -:
@@ -87,9 +88,12 @@ help:## 	help
 serve:strip## 	serve
 	@. serve 2>/tmp/serve.log
 strip:
-	@sed -i '' 's/\\_\\_NOTOC\\_\\_//' *.md
-	@sed -i '' 's/\\_\\_NOTOC\\_\\_//' *.html
-	@sed -i '' 's/.md/.html/' index.html
+	@sed -i  's/\\_\\_NOTOC\\_\\_//' *.md   || \
+		sed -i  '' 's/\\_\\_NOTOC\\_\\_//' *.md
+	@sed -i  's/\\_\\_NOTOC\\_\\_//' *.html || \
+		sed -i  '' 's/\\_\\_NOTOC\\_\\_//' *.html
+	@sed -i  's/.md/.html/' index.html      || \
+		sed -i  '' 's/.md/.html/' index.html
 
 .PHONY: report
 report:## 	make variables
