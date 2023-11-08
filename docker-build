@@ -1,16 +1,83 @@
 #!/usr/bin/env bash
 #
-for f in $(ls **.mediawiki || true)
+function docker-start(){
+
+( \
+
+    ## while docker system info > /dev/null 2>&1; do echo 1; done;
+    while ! docker system info > /dev/null 2>&1; do\
+    echo 'Waiting for docker to start...';\
+    ## echo $DOCKER
+    if [[ "$(uname -s)" == "Linux" ]]; then\
+     systemctl restart docker.service;\
+    fi;\
+    if [[ "$(uname -s)" == "Darwin" ]]; then\
+        DOCKER="/Applications/Docker.app/Contents/MacOS/Docker";\
+        ## [[ -z "$DOCKER" ]] && echo "-z ..." && exit
+        ## [[ ! -z "$DOCKER" ]] && echo "! -z ..." && exit
+        ## echo INNER $DOCKER;\
+     open --background -a $DOCKER;\
+    fi;\
+sleep 1;\
+done\
+)
+
+}
+docker-start
+
+DOCKER=$(which docker)
+MINISCRIPT_PANDOC=miniscript-pandoc
+$DOCKER build --target pandoc -t miniscript-pandoc .
+
+docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "ls"
+docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "ls -a"
+docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "ls -l"
+docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "ls -l *.md"
+## 
+## docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "which pandoc"
+## docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "echo $(which pandoc)"
+## docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "/usr/bin/pandoc -h"
+## docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "/usr/bin/pandoc -h"
+
+if [[ "$1" == "--mediawiki" ]] || [[ "$1" == "-mw" ]]; then
+for f in $(ls *.mediawiki || true)
 do
-    command -v docker >/dev/null && docker run --rm --volume "`pwd`:/data" --user `id -u`:`id -g` pandoc/latex:2.6 --preserve-tabs --ascii --from=mediawiki --to=markdown $f | sed 's/__NOTOC__//' > $(sed 's/mediawiki/md/g' <<< $f) || echo "install docker"
+    echo $f
+    docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` pandoc/latex:2.6 -c "/usr/bin/pandoc --quiet $(cat `pwd`/$f) > $f-docker.md"
+
 done
 
-for f in $(ls **.md || true)
+fi
+if [[ "$1" == "--markdown" ]] || [[ "$1" == "-md" ]]; then
+for f in $(ls *.md || true)
 do
-    command -v docker >/dev/null && docker run --rm --volume "`pwd`:/data" --user `id -u`:`id -g` pandoc/latex:2.6 --preserve-tabs --ascii --from=markdown --to=html $f | sed 's/__NOTOC__//' > $(sed 's/md/html/g' <<< $f) || echo "install docker"
+    echo $f
+    docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "pandoc --quiet --ascii --from=markdown --to=html <(cat $f)" | sed 's/__//' > $(sed 's/md/html/g' <<< $f)
+
 done
+fi
+
+exit
+
+while docker system info > /dev/null 2>&1; do
+
+for f in $(ls *.mediawiki || true)
+do
+    echo $f;
+    command -v $DOCKER >/dev/null && docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "pandoc --preserve-tabs --ascii --from=mediawiki --to=markdown $f" | sed 's/__NOTOC__//' > $(sed 's/mediawiki/md/g' <<< $f) || echo "install docker";
+done
+
+for f in $(ls *.md || true)
+do
+    echo $f;
+    command -v $DOCKER >/dev/null && docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` pandoc/latex:2.6 bash -c "pandoc --preserve-tabs --ascii --from=markdown --to=html $f" | sed 's/__NOTOC__//' > $(sed 's/md/html/g' <<< $f) || echo "install docker";
+done
+
 for f in $(ls README.md || true)
 do
-    command -v docker >/dev/null && docker run --rm --volume "`pwd`:/data" --user `id -u`:`id -g` pandoc/latex:2.6 --preserve-tabs --ascii --from=markdown --to=html $f | sed 's/__NOTOC__//' > $(sed 's/md/html/g' <<< $f) || echo "install docker"
-    cp readme.html index.html
+    echo $f;
+    command -v $DOCKER >/dev/null && docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` pandoc/latex:2.6 bash -c "pandoc --preserve-tabs --ascii --from=markdown --to=html $f" | sed 's/__NOTOC__//' > $(sed 's/md/html/g' <<< $f) || echo "install docker";
+    cp readme.html index.html || echo true
+done
+
 done
