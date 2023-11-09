@@ -1,0 +1,30 @@
+name: docker-matrix
+
+on:
+  push:
+    branches: [ "ma**", "**", "v*", "v**", "v*.*.*-rc**" ]
+  pull_request:
+    branches: [ "ma**", "**" ]
+
+workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        tag: ["latest","latest"]
+
+    container: empscripten/emsdk:${{ matrix.tag }}
+
+    steps:
+      - run: git config --global --add safe.directory /__w/miniscript-templates/miniscript-templates || echo
+      - uses: actions/checkout@v2
+      - run: |
+          make
+          make miniscript
+          install ./miniscript /usr/local/bin/
+          which miniscript
+          file miniscript
