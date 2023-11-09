@@ -87,13 +87,21 @@ help:## 	help
 
 serve:strip## 	serve
 	@. serve 2>/tmp/serve.log
+
+.ONESHELL:
 strip:
-	@sed -i  's/\\_\\_NOTOC\\_\\_//' *.md   || \
-		sed -i  '' 's/\\_\\_NOTOC\\_\\_//' *.md
-	@sed -i  's/\\_\\_NOTOC\\_\\_//' *.html || \
-		sed -i  '' 's/\\_\\_NOTOC\\_\\_//' *.html
-	@sed -i  's/.md/.html/' index.html      || \
-		sed -i  '' 's/.md/.html/' index.html
+	@(\
+	if [[ "$(shell uname -s)" == "Linux" ]]; \
+	then \
+		sed -i  's/\\_\\_NOTOC\\_\\_//' *.md   >/dev/null  && \
+		sed -i  's/\\_\\_NOTOC\\_\\_//' *.html >/dev/null  && \
+		sed -i  's/.md/.html/' index.html      >/dev/null; fi)
+	@(\
+	if [[ "$(shell uname -s)" == "Darwin" ]]; \
+	then \
+		sed -i  '' 's/\\_\\_NOTOC\\_\\_//' *.md   >/dev/null  && \
+		sed -i  '' 's/\\_\\_NOTOC\\_\\_//' *.html >/dev/null  && \
+		sed -i  '' 's/.md/.html/' index.html      >/dev/null; fi)
 
 .PHONY: report
 report:## 	make variables
