@@ -1,10 +1,12 @@
 [submodule "docker"]
 	path = docker
-	url = https://github.com/bitcoincore-dev/miniscript-docker.git
+    url = https://github.com/bitcoincore-dev/miniscript-docker.git
+    branch = main
     ignore = dirty
     depth = shallow
 [submodule "wiki"]
 	path = wiki
-    url = git@github.com:bitcoincore-dev/miniscript-templates.wiki.git
+    url = https://github.com/bitcoincore-dev/miniscript-templates.wiki.git
+    branch = main
     ignore = dirty
     depth = shallow
