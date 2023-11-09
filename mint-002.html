@@ -1,0 +1,82 @@
+<pre><code>  Miniscript Template: 2
+  Title: 5 Key Time Layered Multisig
+  Created: 2023-09-11</code></pre>
+<h1 id="name_of_template">Name of Template</h1>
+<p>5 Key Degrading Multisig</p>
+<h1 id="goal_to_be_achieved_by_template">Goal to be achieved by
+template</h1>
+<p>Expanding upon the concept of a 3 key timed multisig, a 5 key timed
+multisig allows for multiple timelocks to be introduced for additional
+flexibility.</p>
+<p>A timelock can be employed to allow a native 3 of 5 multisig to
+become 2 of 5, and eventually 1 of 5 for disaster recovery. This can be
+employed by using a miniscript `tresh()` with seven conditions:</p>
+<p>3 Conditions to be satisfied by:</p>
+<pre><code>1. Key 1
+2. Key 2
+3. Key 3
+4. Key 4
+5. Key 5
+6. First timelock (either relative or absolute)
+7. Second timelock (either relative or absolute)</code></pre>
+<h1 id="timelock_values_note">Timelock Values Note</h1>
+<ul>
+<li>The security of the descriptor template is not dependent on the
+value of a relative or absolute timelock, as it only impacts the
+duration of the timelock. For reference transactions on testnet, short
+duration timelocks have been used, but in practice timelock values will
+differ.</li>
+<li>Relative timelock descriptors offer a structure that can persist
+across time, requiring a self-send to extend the timelock security, and
+thus offering a better ability to have standard timelock durations
+within templates.</li>
+<li>It is harder to set established timelock values with absolute
+timelock descriptors as they need to be regularly updated.</li>
+</ul>
+<p>Suggested Relative Block Height Timelocks:</p>
+<ul>
+<li>older(32800) - Halfway point of block height relative timelock (~278
+days assuming constant hashrate)</li>
+</ul>
+<!-- -->
+<ul>
+<li>older(65535) - maximum duration of a block height relative timelock
+(~455 days assuming constant hashrate)</li>
+</ul>
+<p>Suggested Relative Epoch Timmelocks:</p>
+<ul>
+<li>older(4224680) - Approximate Halfway point of epoch time relative
+timelock (~180 days, 6 months)</li>
+</ul>
+<!-- -->
+<ul>
+<li>older(4259839) - Maximum duration of an epoch time relative timelock
+(~388 days)</li>
+</ul>
+<p>Below is a reference diagram on how the 5 Key Time Layered Multisig
+operates across time:</p>
+<p><img src=mint-002/diagram.jpg></img></p>
+<h1 id="example_miniscript_output_descriptor">Example Miniscript Output
+Descriptor</h1>
+<p>1. 5 Key Time Lock Multisig - Relative Blockheight Timelock</p>
+<p><code>&#xA0;&#xA0;&#xA0;wsh(thresh(3,pk(XPUB1),s:pk(XPUB2),s:pk(XPUB3),s:pk(XPUB4),s:pk(XPUB5),snu:older(100),snu:older(200)))</code></p>
+<p><a
+href="https://mempool.space/testnet/tx/31e22b75d58323f7cfca225912a90d49ff959716babd9bad9fe6459a9f91b700">Reference
+Testnet Transaction</a></p>
+<p>2. 5 Key Time Lock Multisig - Absolute Blockheight Timelock</p>
+<p><code>&#xA0;&#xA0;&#xA0;wsh(thresh(3,pk(XPUB1),s:pk(XPUB2),s:pk(XPUB3),s:pk(XPUB4),s:pk(XPUB5),snu:after(1694563200),snu:after(1694563200)))</code></p>
+<p><a
+href="https://mempool.space/testnet/tx/d6e1dd2e35ffcf111f3868ee38d22e70b2439d7b3bc1db064fef6d25eee3c506">Reference
+Testnet Transaction</a></p>
+<p>3. 5 Key Time Lock Multisig - Absolute Epochtime Timelock</p>
+<p><code>&#xA0;&#xA0;&#xA0;wsh(thresh(3,pk(XPUB1),s:pk(XPUB2),s:pk(XPUB3),s:pk(XPUB4),s:pk(XPUB5),snu:after(1694563200),snu:after(1694476800)))</code></p>
+<p><a
+href="https://mempool.space/testnet/tx/caba0f5b81beac934aeed0b93a1a683bc86cf85b3bc935284404bfddb9ab0156">Reference
+Testnet Transaction</a></p>
+<p>4. 5 Key Time Lock Multisig - Relative Epochtime Timelock</p>
+<p><code>&#xA0;&#xA0;&#xA0;wsh(thresh(3,pk(XPUB1),s:pk(XPUB2),s:pk(XPUB3),s:pk(XPUB4),s:pk(XPUB5),snu:older(4194400),snu:older(4194500)))</code></p>
+<p><a
+href="https://mempool.space/testnet/tx/747087e37aadf7965568d5efa0a02ccc328908539c99e30fcb1bb9631554e317">Reference
+Testnet Transaction</a></p>
+<p>(To Add Taproot descriptors once Minitapscript is merged into
+Core)</p>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>63</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+</head>
+<body>
+<pre><code>  MinT: 9999
+  Title: MinT-9999-miniscript
+  Created: 2023-09-11</code></pre>
+<h2 id="mint_9999_miniscript">MinT-9999-miniscript</h2>
+<h3 id="proposed_timelock_usage">Proposed Timelock Usage</h3>
+<p>2. Goal to be achieved by template</p>
+<p><a href="https://bitcoin.sipa.be/miniscript/">Miniscript</a> facilitates easier access to utilizing timelocks in Bitcoin, it opens a new frontier in Bitcoin security concerning the construction of more advanced Scripts. This document aims to standardize timelock application across different wallet solutions, focusing on wallet recovery and standardizing expected timelock usage for streamlined hardware and software wallet interfaces.</p>
+<p>In the event an output descriptor has been partially or fully lost, minimizing the overall search space for expected timestamp values can expedite recovery. General Miniscript usage supports any valid timelock value, this proposal seeks to guide implementation to more user-friendly practices.</p>
+<h1 id="block_height_based_timelocks">Block height based Timelocks:</h1>
+<h2 id="absolute_block_height_based_timelocks">Absolute block height based Timelocks</h2>
+<p><strong>Proposal</strong>: Set absolute block height-based timelocks as multiples of 100, always ending in 00.</p>
+<p>Examples of valid Block Height Absolute Timelocks</p>
+<ul>
+<li>after(1000)</li>
+<li>after(50700)</li>
+<li>after(82800)</li>
+<li>after(615000)</li>
+</ul>
+<h2 id="relative_block_height_based_timelocks">Relative block height based Timelocks</h2>
+<p><strong>Proposal</strong>: Make relative block height-based timelocks multiples of 100, except for the maximum value, 65,536 (2^16).</p>
+<ul>
+<li>older(100)</li>
+<li>older(1500)</li>
+<li>older(65535)</li>
+</ul>
+<h1 id="epoch_timestamp_based_timelocks">Epoch timestamp based Timelocks:</h1>
+<h2 id="absolute_epochtime_based_timelocks">Absolute Epochtime based Timelocks</h2>
+<p><strong>Proposal</strong>: To synchronize with real-world time rather than block time, employ epoch timestamps that are divisible by 43200 (Noon GMT) or 86400 (Midnight GMT). Optimally, use multiples of 604800 for Thursday at Midnight GMT.</p>
+<p><strong>Limitation</strong>: Avoid setting epoch timestamps beyond 2105 (4291704000) to prevent any possible issue with related to its 32 bit unsigned integer used for timestamps to happen in in February of 2106.</p>
+<p>Propsoed Examples of valid Epoch Timestamp Absolute Timelocks</p>
+<ul>
+<li>after(1694476800) September 12th, 2023 Midnight GMT</li>
+<li>after(1694520000) September 12th, 2023 Noon GMT</li>
+<li>after(2160172800) June 15th, 2038 Midnight GMT</li>
+<li>after(2234779200) October 25th, 2040 Noon GMT</li>
+</ul>
+<h2 id="relative_epochtime_based_timelocks">Relative Epochtime based Timelocks</h2>
+<p>Proposed Examples of valid Block Height Relative Timelocks:</p>
+<p>Background:</p>
+<ul>
+<li>Following <a href="https://github.com/bitcoin/bips/blob/master/bip-0068.mediawiki">BIP68</a>, relative epoch timestamp timelocks can only go as far out as 33,554,431 seconds (1.06 years), as it is constrained by the same units as relative block height timelocks, 65,536 (2^16), where each unit represents 512 seconds (8 minutes and 32 seconds) of time (65,356 units * 512 seconds = 33,554,432 seconds).</li>
+</ul>
+<!-- -->
+<ul>
+<li>An Epoch Timestamp is not valid until the network's MTP (Median Time Past) of the past 11 blocks is greater than the epoch timestamp, MTP is defined in: <a href="https://github.com/bitcoin/bips/blob/master/bip-0113.mediawiki">BIP113</a>.</li>
+</ul>
+<!-- -->
+<ul>
+<li>The smallest value that can be used to have the miniscript compiler interpret a relative timelock is older(4194305) (calculated by following the BIP68 spec of: 1 |= (1 &lt;&lt; 22)). This is a 1 unit timelock of duration 512 seconds.</li>
+</ul>
+<!-- -->
+<ul>
+<li>The maximum value for a relative epoch timelock is older(4259839) which is 65,535 unit timelock, resulting in 33,554,431 seconds, or 388 days.</li>
+</ul>
+<!-- -->
+<ul>
+<li>The 512 second incrementor is a common multiple for the amount of seconds in 4 days, which is 675 units. To encourage intuitive usage of relative timelocks, they should be multiples of 675.</li>
+</ul>
+<p>, an exception should be made for the largest possible epoch timestamp relative timelock.</p>
+<p><strong>Proposal</strong>: Starting at 4194304, increment by 675 (4 days), for relative epochtime timelocks, the maximum value being 4259839.</p>
+<p>Propsoed Examples of valid Epoch Timestamp Absolute Timelocks</p>
+<ul>
+<li>older(4194979) 4 days, minimum value</li>
+<li>older(4214554) 120 days</li>
+<li>older(4224679) 180 days</li>
+<li>older(4255729) 364 days</li>
+<li>older(4259839) 388 days, maximum value</li>
+</ul>
+</body>
+</html>
