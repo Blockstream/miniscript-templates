@@ -1,27 +1,38 @@
 #!/usr/bin/env bash
 #
+
+##
+function strip (){
+(\
+    if [[ "$(uname -s)" == "Linux" ]]; \
+	then \
+		sed -i  's/\\_\\_NOTOC\\_\\_//' *.md      >/dev/null  && \
+		sed -i  's/\\_\\_NOTOC\\_\\_//' *.html    >/dev/null  && \
+		sed -i  's/.md/.html/' index.html         >/dev/null; fi)
+	(\
+	if [[ "$(uname -s)" == "Darwin" ]]; \
+	then \
+		sed -i  '' 's/\\_\\_NOTOC\\_\\_//' *.md   >/dev/null  && \
+		sed -i  '' 's/\\_\\_NOTOC\\_\\_//' *.html >/dev/null  && \
+		sed -i  '' 's/.md/.html/' index.html      >/dev/null; fi)
+    }
+
+##
 function docker-start(){
-
-( \
-
-    ## while docker system info > /dev/null 2>&1; do echo 1; done;
-    while ! docker system info > /dev/null 2>&1; do\
-    echo 'Waiting for docker to start...';\
-    ## echo $DOCKER
-    if [[ "$(uname -s)" == "Linux" ]]; then\
-     systemctl restart docker.service;\
-    fi;\
-    if [[ "$(uname -s)" == "Darwin" ]]; then\
-        DOCKER="/Applications/Docker.app/Contents/MacOS/Docker";\
-        ## [[ -z "$DOCKER" ]] && echo "-z ..." && exit
-        ## [[ ! -z "$DOCKER" ]] && echo "! -z ..." && exit
-        ## echo INNER $DOCKER;\
-     open --background -a $DOCKER;\
-    fi;\
+(\
+    while ! docker system info > /dev/null 2>&1; do \
+    clear || true; \
+    echo 'Waiting for docker to start...';  \
+    if [[ "$(uname -s)" == "Linux" ]]; then \
+     systemctl restart docker.service; \
+    fi; \
+    if [[ "$(uname -s)" == "Darwin" ]]; then \
+        DOCKER="/Applications/Docker.app/Contents/MacOS/Docker"; \
+     open --background -a $DOCKER; \
+    fi; \
 sleep 1;\
-done\
+done \
 )
-
 }
 docker-start
 
@@ -29,10 +40,10 @@ DOCKER=$(which docker)
 MINISCRIPT_PANDOC=miniscript-pandoc
 $DOCKER build --target pandoc -t miniscript-pandoc .
 
-docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "ls"
-docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "ls -a"
-docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "ls -l"
-docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "ls -l *.md"
+## docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "ls"
+## docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "ls -a"
+## docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "ls -l"
+## docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "ls -l *.md"
 ## 
 ## docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "which pandoc"
 ## docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "echo $(which pandoc)"
@@ -43,20 +54,30 @@ if [[ "$1" == "--mediawiki" ]] || [[ "$1" == "-mw" ]]; then
 for f in $(ls *.mediawiki || true)
 do
     echo $f
-    docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` pandoc/latex:2.6 -c "/usr/bin/pandoc --quiet $(cat `pwd`/$f) > $f-docker.md"
+    docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "pandoc --quiet --ascii --from=mediawiki --to=markdown <(cat $f)" | sed 's/__//' > $(sed 's/mediawiki/mw.md/g' <<< $f)
 
 done
-
 fi
+
 if [[ "$1" == "--markdown" ]] || [[ "$1" == "-md" ]]; then
 for f in $(ls *.md || true)
 do
     echo $f
-    docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "pandoc --quiet --ascii --from=markdown --to=html <(cat $f)" | sed 's/__//' > $(sed 's/md/html/g' <<< $f)
+    docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "pandoc --standalone --quiet --ascii --from=markdown --to=html <(cat $f)" | sed 's/__//' > $(sed 's/md/html/g' <<< $f)
 
 done
 fi
 
+for f in $(ls README.md || true)
+do
+    echo $f;
+    docker run --rm --volume "`pwd`:/src" --user `id -u`:`id -g` $MINISCRIPT_PANDOC:latest bash -c "pandoc --standalone --quiet --ascii --from=markdown --to=html <(cat $f)" | sed 's/__//' > $(sed 's/md/html/g' <<< $f)
+    cp readme.html index.html || echo true
+done
+
+strip
+
+cp README.html index.html || true 
 exit
 
 while docker system info > /dev/null 2>&1; do
