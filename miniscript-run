@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+function help(){
+    echo "miniscript-run '<miniscript>'";
+    echo "miniscript-run 'pk_h(test)'";exit
+}
+if [[ "$1" == "help" ]] || [[ "$1" == "-h" ]]; then
+    help; exit
+fi
+
+function install(){
+
+    [ ! -d miniscript ] && \
+        $(which git) clone --depth 1 https://github.com/sipa/miniscript.git
+
+    cd miniscript && \
+        make >/dev/null && \
+        install miniscript /usr/local/bin 2>/dev/null && \
+        file miniscript && \
+        cd .. || file echo $(which miniscript);
+
+    [[ -z "$(command -v miniscript-run)" ]] && \
+        install $0 /usr/local/bin || \
+        echo $(which miniscript-run);exit
+}
+if [[ "$1" == "install" ]]; then
+    install; exit
+fi
+#
+for var in "$@"
+do
+    echo "$var" | $(which miniscript) 2>/dev/null;exit || \
+    echo "$var" | ./miniscript/miniscript;exit || help
+done
+help
