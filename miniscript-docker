@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+[[ -z "$(command -v miniscript-docker)" ]] && \
+        install $0 /usr/local/bin || true
+
 PORT=${PORT:80}
 VERBOSE=${VERBOSE:-	}
 
@@ -113,24 +116,32 @@ function build(){
 
 }
 
-function run () {
+function run(){
 
-    echo $1
+    docker-start
     echo $2
-    echo $3
-    ## docker-start
-
     docker \
         run \
         --rm \
         -v $PWD:/src \
         $TAG \
         sh \
-        -c "echo '$1' | miniscript" exit;
+        -c "echo '$2' | ./miniscript-run";exit;
+
+    ## echo $1
+    docker \
+        run \
+        --rm \
+        -v $PWD:/src \
+        $TAG \
+        sh \
+        -c "echo '$1' | miniscript";
+    echo $2
 
 }
 function shell (){
 
+    docker-start
     docker \
         run \
         -t \
