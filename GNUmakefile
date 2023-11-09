@@ -123,6 +123,7 @@ report:## 	make variables
 	@echo 'TEMPLATES_HTML=${TEMPLATES_HTML}'
 
 README:
+	@which pandoc
 	@command \
 		-v \
 		pandoc >/dev/null 2>&1 && \

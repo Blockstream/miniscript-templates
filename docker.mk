@@ -21,3 +21,6 @@ docker-start:## 	start docker on Linux or Darwin
 	echo $(GITHUB_JOB);\
 	done\
 	)
+.PHONY:docker
+docker:submodules
+	cd ./docker && make

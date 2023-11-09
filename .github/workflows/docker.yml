@@ -27,3 +27,4 @@ jobs:
       - run : make MinT-000 && ls
       - run : make MinT-001 && ls
       - run : make MinT-002 && ls
+      - run : make docker
