@@ -23,4 +23,4 @@ docker-start:## 	start docker on Linux or Darwin
 	)
 .PHONY:docker
 docker:submodules
-	cd ./docker && make
+	cd ./docker && make && make miniscript
