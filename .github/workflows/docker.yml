@@ -6,8 +6,6 @@ on:
   pull_request:
     branches: [ "ma**", "**" ]
 
-workflow_dispatch:
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,16 +13,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag: ["latest","latest"]
+        tag: ["latest", "3.1.48"]
 
-    container: empscripten/emsdk:${{ matrix.tag }}
+    container: emscripten/emsdk:${{ matrix.tag }}
 
     steps:
       - run: git config --global --add safe.directory /__w/miniscript-templates/miniscript-templates || echo
+      - run : apt-get update
+      - run : apt-get install make
       - uses: actions/checkout@v2
-      - run: |
-          make
-          make miniscript
-          install ./miniscript /usr/local/bin/
-          which miniscript
-          file miniscript
+      - run : make
+      - run : make README && ls
+      - run : make MinT-000 && ls
+      - run : make MinT-001 && ls
+      - run : make MinT-002 && ls
