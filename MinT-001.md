@@ -53,7 +53,7 @@ duration epoch time relative timelock (\~388 days)
 Below is a reference diagram on how the 3 Key Time Layered Multisig
 operates across time:
 
-<img src=template-001/diagram.jpg></img>
+<img src=mint-001/diagram.jpg></img>
 
 Example Miniscript Output Descriptors {#example_miniscript_output_descriptors}
 =====================================

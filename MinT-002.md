@@ -66,7 +66,7 @@ Suggested Relative Epoch Timmelocks:
 Below is a reference diagram on how the 5 Key Time Layered Multisig
 operates across time:
 
-<img src=template-002/diagram.jpg></img>
+<img src=mint-002/diagram.jpg></img>
 
 Example Miniscript Output Descriptor {#example_miniscript_output_descriptor}
 ====================================
