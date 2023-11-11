@@ -1,0 +1,258 @@
+#!/usr/bin/env bash
+
+[[ -z "$(command -v miniscript-docker)" ]] && \
+        install $0 /usr/local/bin || true
+
+PORT=${PORT:80}
+VERBOSE=${VERBOSE:-	}
+
+FORCE=${FORCE:-	}
+NOCACHE=${NOCACHE:-	} ## default rebuild without --no-cache
+TAG=${TAG:-miniscript}
+
+PYTHON3=$(which python3)
+
+#if [[ "$CI" == "" ]];
+#then
+#    if [[ "$(uname -s)" == "Darwin"  ]];
+#    then
+#        DOCKER=${DOCKER:-"/Applications/Docker.app/Contents/MacOS/Docker"}
+#    fi
+#fi
+DOCKER=docker
+## echo $DOCKER; ##exit
+## [[ -z "$DOCKER" ]] && echo "????" && DOCKER=${DOCKER:docker}
+
+## MINT_000
+
+## MINT_001
+
+## MINT_002
+MINT_002_1="thresh(3,pk(XPUB1),s:pk(XPUB2),s:pk(XPUB3),s:pk(XPUB4),s:pk(XPUB5),snu:older(100),snu:older(200))"
+MINT_002_2="thresh(3,pk(XPUB1),s:pk(XPUB2),s:pk(XPUB3),s:pk(XPUB4),s:pk(XPUB5),snu:after(1694563200),snu:after(1694563200))"
+MINT_002_3="thresh(3,pk(XPUB1),s:pk(XPUB2),s:pk(XPUB3),s:pk(XPUB4),s:pk(XPUB5),snu:after(1694563200),snu:after(1694476800))"
+MINT_002_4="thresh(3,pk(XPUB1),s:pk(XPUB2),s:pk(XPUB3),s:pk(XPUB4),s:pk(XPUB5),snu:older(4194400),snu:older(4194500))"
+
+## MINT_003
+MINT_003="or(99@thresh(2,thresh(2,pk(A1),pk(A2),pk(A3),after(1004)),or(10@thresh(2,pk(P1),pk(P2),pk(P3),after(1002)),and(thresh(1,pk(SA1),pk(SA2),pk(SA3)),after(1003)))),and(thresh(2,pk(M1),pk(M2),pk(M3)),after(1005)))"
+
+## MINT_004
+MINT_004="or(99@thresh(3,thresh(2,pk(P1),pk(P2),pk(P3),after(1002),after(1003)),thresh(2,pk(A1),pk(A2),pk(A3),after(1004)),thresh(1,pk(SA1),pk(SA2),pk(SA3))),1@and(thresh(2,pk(M1),pk(M2),pk(M3)),after(1005)))"
+
+function docker-start(){
+
+	( \
+	    while ! docker system info > /dev/null 2>&1; do\
+	    echo 'Waiting for docker to start...';\
+        ## echo $DOCKER
+	    if [[ "$(uname -s)" == "Linux" ]]; then\
+	     systemctl restart docker.service;\
+	    fi;\
+	    if [[ "$(uname -s)" == "Darwin" ]]; then\
+            DOCKER="/Applications/Docker.app/Contents/MacOS/Docker";\
+            open --background -a $DOCKER || DOCKER=$(which docker);\
+	    fi;\
+	sleep 1;\
+	done\
+	)
+
+}
+function examples(){
+
+printf "
+thresh(2,pk(XPUB1),s:pk(XPUB2),s:pk(XPUB3),snl:older(100))
+"
+printf "
+and_v(or_c(pk(B),or_c(pk(C),v:older(1000))),pk(A))
+"
+printf "
+and(pk(A),or(pk(B),or(9@pk(C),older(1000))))
+"
+printf "
+and(pk(A),or(pk(B),or(9@pk(C),older(1000))))
+"
+printf "
+and(pk(A),or(pk(B),or(9@pk(C),older(1000))))
+"
+printf "
+$MINT_002_1
+"
+printf "
+$MINT_002_2
+"
+printf "
+$MINT_002_3
+"
+printf "
+$MINT_002_4
+"
+printf "
+$MINT_003
+"
+    printf "
+$MINT_004
+"
+exit
+}
+
+function help {
+
+    printf "Usage:\n"
+    printf "\n"
+    printf "  miniscript-docker\n"
+    printf "\n"
+    printf "  miniscript-docker examples\n"
+    printf "\n"
+    printf "  miniscript-docker help  [-h --help]\n"
+    printf "\n"
+    printf "  miniscript-docker build [-b --build]\n"
+    printf "\n"
+    printf "  miniscript-docker shell\n"
+    printf "\n"
+    printf "  miniscript-docker run '<miniscript>'"
+    printf "\n"
+    exit;
+}
+
+function build(){
+
+    echo $DOCKER
+    echo $NOCACHE
+    [ "$NOCACHE" ]      && docker build --no-cache -t $TAG . && exit;
+    [ ! -z "$NOCACHE" ] && docker build $NOCACHE   -t $TAG . && exit;
+
+}
+
+function run(){
+
+    docker-start
+    #echo $2
+    #docker \
+    #    run \
+    #    --rm \
+    #    -v $PWD:/src \
+    #    $TAG \
+    #    sh \
+    #    -c "echo '$2' | ./miniscript-run";exit;
+
+    ## echo $1
+    docker \
+        run \
+        --rm \
+        -v $PWD:/src \
+        $TAG \
+        sh \
+        -c "echo '$1' | miniscript";
+
+exit
+}
+function shell (){
+
+    docker-start
+    docker \
+        run \
+        -t \
+        -i \
+        --rm \
+        -p 127.0.0.1:$PORT:8080/tcp \
+        -v `pwd`:/src miniscript bash
+}
+## argparse
+## position $1
+## echo "\${!#}=${!#}"
+while test $# -gt 0
+do
+    case "$1" in
+        start) docker-start; exit
+            ;;
+        verbose) VERBOSE=1; echo $VERBOSE
+            ;;
+        --verbose) VERBOSE=1; echo $VERBOSE
+            ;;
+        -v) VERBOSE=1; echo $VERBOSE
+            ;;
+        help) help;
+            ;;
+        --help) help;
+            ;;
+        -h) help;
+            ;;
+        --force) FORCE=--force; ## echo FORCE=$FORCE
+            ;;
+        -f)      FORCE=--force; ## echo FORCE=$FORCE
+            ;;
+        build) build
+            ;;
+        --build) build
+            ;;
+        -b) build
+            ;;
+         b) build
+            ;;
+        make) make
+            ;;
+        --make) make
+            ;;
+        -m) make
+            ;;
+        run) RUN=TRUE && run $2 $3 $4
+            ;;
+        shell) shell
+            ;;
+        examples) examples
+            ;;
+        --examples) examples
+            ;;
+        -e) examples
+            ;;
+        --*) echo "bad option $1"
+            ;;
+        *) echo "argument $1"
+            ;;
+    esac
+    shift
+done
+## position $2
+while test $# -gt 1
+do
+    case "$2" in
+        ## support docker-miniscript build -f
+        ##         docker-miniscript -f build
+        start) docker-start; exit
+            ;;
+        verbose) VERBOSE=1; echo $VERBOSE
+            ;;
+        --verbose) VERBOSE=1; echo $VERBOSE
+            ;;
+        -v) VERBOSE=1; echo $VERBOSE
+            ;;
+        --force) FORCE=--force; ## echo FORCE=$FORCE
+            ;;
+        -f) FORCE=--force;      ## echo FORCE=$FORCE
+            ;;
+        build) build
+            ;;
+        --build) build
+            ;;
+        -b) build
+            ;;
+        make) make
+            ;;
+        --make) make
+            ;;
+        -m) make
+            ;;
+        examples) examples
+            ;;
+        --examples) examples
+            ;;
+        -e) examaples
+            ;;
+        --*) echo "bad option $1"
+            ;;
+        *) echo "argument $1"
+            ;;
+    esac
+    shift
+done
+help
