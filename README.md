@@ -1,12 +1,18 @@
-<center>
+<!-- 
+sed -i      's/.md/.html/' index.html >/dev/null
+sed -i  ''  's/.md/.html/' index.html >/dev/null ## macos
+-->
 
-|[![miniscript templates (MinT)](https://avatars.githubusercontent.com/u/7424983?s=30)]()|[MinT-000](MinT-000.md)|[MinT-001](MinT-001.md)|[MinT-002](MinT-002.md)|
-|----------|----------|----------|----------|
-
-||[MinT-003](MinT-003.md)|[MinT-999](MinT-999.md)|[MinTT-9999](MinTT-9999.md)|
-|----------|----------|----------|----------|
-
-</center>
+<table>
+<thead>
+<tr class="header">
+<th><a href="."><img src="https://avatars.githubusercontent.com/u/7424983?s=30" alt="miniscript templates (MinT)" /></a></th>
+<th><a href="mint-000.md">000</a></th>
+<th><a href="mint-001.md">001</a></th>
+<th><a href="mint-002.md">002</a></th>
+</tr>
+</thead>
+</table>
 
 ## About
 
@@ -19,78 +25,35 @@ overcome limitations in writing complex spending conditions directly in
 Bitcoin [Script](https://en.bitcoin.it/wiki/Script), it enables formal
 verification and offers a more human-friendly interface.
 
-## Objective
+## Objectives
 
-1.  Each MinT provides an example of a common miniscript implementation.
-2.  Each MinT is provided as is. While care is taken to ensure a high degree of quality. Developers and enthusiasts assume full responsibility for their usage[^use-at-your-own-risk].
+1.  Each `MinT` (Miniscript Template) will provide a common miniscript policy.
 
-3.  Have reviewed templates that leverage Miniscript to assure there are
-    not unintended ways of executing a valid spend beyond the intended
+2.  Curate high quality example templates that demonstrate common use cases of
     [Miniscript](https://raw.githubusercontent.com/bitcoin/bitcoin/master/src/script/miniscript.h)
-    policy.
+    policies.
 
-4.  Have standardized usages of Miniscript to streamline software and
-    hardware wallet integrations.
+3.  Standardized implementations will establish best practices as well as promote uniform on-chain usage for better privacy.
+4.  Each `MinT` will be provided as is. While care is taken to ensure a high degree of quality. Developers and enthusiasts assume full responsibility for their usage[^use-at-your-own-risk].
 
-5.  Have uniform on-chain usage of Miniscript templates for better
-    privacy.
+<!-- additional submission notes -->
+<!--
 
-<H2>
+Additional notes/feedback needed
 
-Submission Format
+Can a developer submit a template
+under a different license?
 
-</H2>
+Will anonymouse templates be accepted?
 
-### Name of Template
+-->
+### [Submission Template](./SUBMISSIONS.md)
+<!-- additional submission notes -->
 
-Proposed Timelock Usage
+<!-- additional developer notes -->
+### [Developers](./DEVELOPERS.md)
+<!-- additional developer notes -->
 
-### Goal to be achieved by template
-
-A 3-of-3 that turns into a 2-of-3 after 90 days
-
-`   NOTE: 144 blocks per day x 90 days = 12960 blocks`
-
-### Miniscript Policy
-
-Input:
-
-    thresh(3, pk(key_1), pk(key_2), pk(key_3), older(12960))
-
-Output:
-
-    thresh(3, pk(key_1), s:pk(key_2), s:pk(key_3), sln:older(12960))
-
-    Spending cost analysis
-
-    Script: 122 WU
-    Input: 166.250000 WU
-    Total: 288.250000 WU
-
-<h4>
-
-Resulting Bitcoin Script structure
-
-</h4>
-
-
-    <key_1> OP_CHECKSIG OP_SWAP <key_2> OP_CHECKSIG OP_ADD OP_SWAP <key_3>
-    OP_CHECKSIG OP_ADD OP_SWAP OP_IF
-      0
-    OP_ELSE
-      <a032> OP_CHECKSEQUENCEVERIFY OP_0NOTEQUAL
-    OP_ENDIF
-    OP_ADD 3 OP_EQUAL
-
-[testnet
-tx](https://mempool.space/testnet/tx/13a204ec065f76878ee1f59f79b3eb2cea2b3fda4d8938e6cfa6a8394d090769)
-
-`   `[`https://mempool.space/testnet/tx/13a204ec065f76878ee1f59f79b3eb2cea2b3fda4d8938e6cfa6a8394d090769`](https://mempool.space/testnet/tx/13a204ec065f76878ee1f59f79b3eb2cea2b3fda4d8938e6cfa6a8394d090769)
-
-### Additional Links
-
-[usage
-example](https://github.com/sipa/miniscript/blob/master/bitcoin/script/miniscript.h)
 
 ### Additional Resources
 
@@ -100,13 +63,45 @@ github.com/sipa/miniscript/tree/master](https://github.com/sipa/miniscript/tree/
 [
 bitcoin.sipa.be/miniscript](https://bitcoin.sipa.be/miniscript )
 
+
+<!-- navigation example and logos -->
+
+<hr>
 <details>
-<summary>Additional Links</summary>
+<summary>Blockstream Research</summary>
 <p>
-
-#### Blockstream/miniscript-templates:
-
-[![Additional Link](https://avatars.githubusercontent.com/u/7424983?s=100)](https://github.com/Blockstream/miniscript-templates)
-
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=50" title="logo-50" alt="Alt Image Text" /></a></td>
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=50" title="logo-50" alt="Alt Image Text" /></a></td>
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=50" title="logo-50" alt="Alt Image Text" /></a></td>
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=50" title="logo-50" alt="Alt Image Text" /></a></td>
+</tr><br>
+<tr class="even">
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=30" title="logo-30" alt="Alt Image Text" /></a></td>
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=30" title="logo-30" alt="Alt Image Text" /></a></td>
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=30" title="logo-30" alt="Alt Image Text" /></a></td>
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=30" title="logo-30" alt="Alt Image Text" /></a></td>
+</tr><br>
+<tr class="odd">
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=30" title="logo-20" alt="Alt Image Text" /></a></td>
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=30" title="logo-20" alt="Alt Image Text" /></a></td>
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=30" title="logo-20" alt="Alt Image Text" /></a></td>
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=30" title="logo-20" alt="Alt Image Text" /></a></td>
+</tr><br>
+<tr class="even">
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=30" title="logo-10" alt="Alt Image Text" /></a></td>
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=30" title="logo-10" alt="Alt Image Text" /></a></td>
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=30" title="logo-10" alt="Alt Image Text" /></a></td>
+<td style="text-align: center;"><a href=""><img src="https://avatars.githubusercontent.com/u/7424983?s=30" title="logo-10" alt="Alt Image Text" /></a></td>
+</tr>
+</tbody>
+</center>
 </p>
 </details>
+
+<!-- footnotes -->
+
+[^mint]: Miniscript Template
+[^mintt]: MiniTapscript Template
+[^use-at-your-own-risk]: Use at your own risk.
