@@ -113,16 +113,16 @@ README:
 		--from=markdown \
 		--to=html $@.md | \
 		sed 's/__NOTOC__//' > index.html || \
-		command -v docker && \
-		docker \
-		pull \
-		pandoc/latex:2.6 && \
-		docker \
-		run \
-		--rm \
-		--volume "`pwd`:/data" \
-		--user `id -u`:`id -g` \
-		pandoc/latex:2.6 $@.md > index.html || $(MAKE) docker-start
+		sed '' 's/__NOTOC__//' > index.html || \
+		command \
+			-v \
+			docker 2>/dev/null && \
+			docker pull pandoc/latex:2.6 && \
+			docker run \
+			--rm \
+			--volume "`pwd`:/data" \
+			--user `id -u`:`id -g` \
+			pandoc/latex:2.6 $@.md > index.html || $(MAKE) docker-start
 
 $(TEMPLATES):
 	@command \
@@ -134,14 +134,18 @@ $(TEMPLATES):
 		--from=markdown \
 		--to=html $@.md | \
 		sed 's/__NOTOC__//' > $@.html || \
-		command -v docker 2>/dev/null && \
-		docker pull pandoc/latex:2.6 && \
-		docker run \
-		--rm \
-		--volume "`pwd`:/data" \
-		--user `id -u`:`id -g` \
-		pandoc/latex:2.6 $@.md && \
-		sed -i '' 's/\\_\\_NOTOC\\_\\_//' $@.html || $(MAKE) docker-start
+		sed '' 's/__NOTOC__//' > $@.html || \
+		command \
+			-v \
+			docker 2>/dev/null && \
+			docker pull pandoc/latex:2.6 && \
+			docker run \
+			--rm \
+			--volume "`pwd`:/data" \
+			--user `id -u`:`id -g` \
+			pandoc/latex:2.6 $@.md && \
+			sed -i 's/\\_\\_NOTOC\\_\\_//' $@.html || \
+			sed -i '' 's/\\_\\_NOTOC\\_\\_//' $@.html || $(MAKE) docker-start
 
 .PHONY: version
 version:## 	make version
