@@ -122,7 +122,7 @@ README:
 		--rm \
 		--volume "`pwd`:/data" \
 		--user `id -u`:`id -g` \
-		pandoc/latex:2.6 $@.md > index.html || echo "start docker"
+		pandoc/latex:2.6 $@.md > index.html || $(MAKE) docker-start
 
 $(TEMPLATES):
 	@command \
@@ -141,7 +141,7 @@ $(TEMPLATES):
 		--volume "`pwd`:/data" \
 		--user `id -u`:`id -g` \
 		pandoc/latex:2.6 $@.md && \
-		sed -i '' 's/\\_\\_NOTOC\\_\\_//' $@.html || echo "start docker"
+		sed -i '' 's/\\_\\_NOTOC\\_\\_//' $@.html || $(MAKE) docker-start
 
 .PHONY: version
 version:## 	make version
@@ -156,6 +156,19 @@ else
 	@type brew && brew install emscripten
 	@type brew && brew install --cask docker
 endif
+
+docker-start:## 	docker-start
+	@( \
+	    while ! docker system info > /dev/null 2>&1; do \
+	    echo 'Waiting for docker to start...'; \
+	    if [[ "$(uname -s)" == "Linux" ]]; then \
+	     systemctl restart docker.service; \
+	    fi; \
+        [[ "$(OS)" == "Darwin" ]] && \
+        open --background -a /Applications/Docker.app/Contents/MacOS/./Docker; \
+	sleep 1; \
+	done \
+	)
 
 .PHONY:$(TEMPLATES) serve
 
