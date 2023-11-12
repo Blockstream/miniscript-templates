@@ -1,0 +1,13 @@
+#version
+version
+#build
+*.html
+
+#make
+#serve
+apple-touch-icon-precomposed.png
+apple-touch-icon.png
+favicon.ico
+
+#MacOS
+*.DS_Store
