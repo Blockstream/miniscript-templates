@@ -1,0 +1,110 @@
+name: build-matrix
+
+on:
+  pull_request:
+    branches:
+      - '*'
+      - '*/*'
+      - '**'
+      - 'master'
+      - 'main'
+  push:
+    branches:
+      - '*'
+      - '*/*'
+      - '**'
+      - 'master'
+      - 'main'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    env:
+      BUILD: "build"
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: echo test
+        run: |
+          echo BUILD=${{ env.BUILD }}
+          echo VARIABLE=${{ env.VARIABLE }}
+        env:
+          BUILD1: "VARIABLE"
+      - uses: styfle/cancel-workflow-action@0.11.0
+        if: ${{ !env.ACT }}
+        with:
+          access_token: ${{ github.token }}
+      - name: Restore deps
+        id: cache-deps-restore
+        uses: actions/cache/restore@v3
+        if: ${{ !env.ACT }}
+        with:
+          path: |
+            ~/.cargo
+            ~/.rustup
+            CARGO_TARGET_DIR
+          key: ${{ runner.os }}-deps
+
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+          set-safe-directory: 'true'
+
+      - uses: actions-rs/toolchain@v1.0.6
+        #if: ${{ !env.ACT }}
+        with:
+          toolchain: nightly
+          default: true
+          override: true
+
+      - name: echo BUILD
+        run: |
+          echo $BUILD
+
+      - name: echo VARIABLE
+        run: |
+          echo $VARIABLE
+
+      - name: make sequence
+        run: |
+          printenv
+          V=1 make
+          V=1 make help
+          V=1 make report
+          V=1 make all
+          V=1 make mint-000
+          V=1 make mint-001
+          V=1 make mint-002
+
+      - name: miniscript-docker
+        run: |
+          ./miniscript-docker
+          miniscript-docker
+          miniscript-docker help
+          miniscript-docker build
+          miniscript-docker examples
+
+      - name: miniscript-docker run tests
+        run: |
+          miniscript-docker run ''
+          miniscript-docker run 'pk_h(test)'
+          miniscript-docker run 'thresh(2,pk(XPUB1),s:pk(XPUB2),s:pk(XPUB3),snl:older(100))'
+          miniscript-docker run 'and_v(or_c(pk(B),or_c(pk(C),v:older(1000))),pk(A))'
+          miniscript-docker run 'and(pk(A),or(pk(B),or(9@pk(C),older(1000))))'
+          miniscript-docker run ''
+          miniscript-docker run ''
+
+      - name: Save deps
+        id: cache-deps-save
+        uses: actions/cache/save@v3
+        if: ${{ !env.ACT }}
+        with:
+          path: |
+            ~/.cargo
+            ~/.rustup
+            CARGO_TARGET_DIR
+          key: ${{ steps.cache-deps-restore.outputs.cache-primary-key }}
+
