@@ -111,9 +111,7 @@ README:
 		--preserve-tabs \
 		--ascii \
 		--from=markdown \
-		--to=html $@.md | \
-		sed 's/__NOTOC__//' > index.html || \
-		sed '' 's/__NOTOC__//' > index.html || \
+		--to=html $@.md || \
 		command \
 			-v \
 			docker 2>/dev/null && \
@@ -124,6 +122,7 @@ README:
 			--user `id -u`:`id -g` \
 			pandoc/latex:2.6 $@.md > index.html || $(MAKE) docker-start
 
+.PHONY:$(TEMPLATES) serve
 $(TEMPLATES):
 	@command \
 		-v \
@@ -132,9 +131,7 @@ $(TEMPLATES):
 		--preserve-tabs \
 		--ascii \
 		--from=markdown \
-		--to=html $@.md | \
-		sed 's/__NOTOC__//' > $@.html || \
-		sed '' 's/__NOTOC__//' > $@.html || \
+		--to=html $@.md > $@.html || \
 		command \
 			-v \
 			docker 2>/dev/null && \
@@ -143,9 +140,8 @@ $(TEMPLATES):
 			--rm \
 			--volume "`pwd`:/data" \
 			--user `id -u`:`id -g` \
-			pandoc/latex:2.6 $@.md && \
-			sed -i 's/\\_\\_NOTOC\\_\\_//' $@.html || \
-			sed -i '' 's/\\_\\_NOTOC\\_\\_//' $@.html || $(MAKE) docker-start
+			pandoc/latex:2.6 $@.md > $@.html || $(MAKE) docker-start
+	$(MAKE) strip
 
 .PHONY: version
 version:## 	make version
@@ -173,8 +169,6 @@ docker-start:## 	docker-start
 	sleep 1; \
 	done \
 	)
-
-.PHONY:$(TEMPLATES) serve
 
 #add additional make commands
 -include Makefile
