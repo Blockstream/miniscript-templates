@@ -70,7 +70,7 @@ Below is a reference diagram on how the 3 Key Time Layered Multisig operates acr
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 
 
-$$\left[ Key_1 \space AND \space Key_2 \right] \space OR \space \left [ Key_1 \space AND \space Key_3 \right] \space OR \space \left[ Key_2 \space AND \space Key_3 \right]$$
+$\left[ Key_1 \space AND \space Key_2 \right] \space OR \space \left [ Key_1 \space AND \space Key_3 \right] \space OR \space \left[ Key_2 \space AND \space Key_3 \right]$
 
 
 ##### Timelock Expires
@@ -79,7 +79,7 @@ $$\left[ Key_1 \space AND \space Key_2 \right] \space OR \space \left [ Key_1 \s
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 
 
-$$\left[ Key_1 \space OR \space Key_2 \space OR \space Key_3 \right] \space AND \space \left[ \space Time \space Unlock \space \right]$$
+$\left[ Key_1 \space OR \space Key_2 \space OR \space Key_3 \right] \space AND \space \left[ \space Time \space Unlock \space \right]$
 
 
 ---
