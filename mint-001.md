@@ -58,15 +58,15 @@ Below is a reference diagram on how the 3 Key Time Layered Multisig operates acr
 
 #### Layer 1
 
-| 3 Key Layered Timelock | Key 1 | $Key_2$ | $Key_3$ |  | $Timelock$ |
+| 3 Key Layered Timelock | Key 1 | Key 2 | Key 3 |  | Timelock |
 |:-------------|:-------------:|:---------------:|:-------------:|:-:|:-:|
-|$Key_n$ + $Key_n$ + $Lock$ | ![assets/key.png](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) | ![assets/key.png](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) | ![assets/key.png](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) | `AND` | ![assets/key.png](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/lock.png) |
+|Key 1 + Key 2 + Lock | ![assets/key.png](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) | ![assets/key.png](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) | ![assets/key.png](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) | `AND` | ![assets/key.png](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/lock.png) |
 
 ##### Valid Spending Conditions
 
 <!-- PLUS means concatenate -->
 
-|![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) $Key_1$| `AND` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) $Key_2$ || ![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) $Key_1$ | `AND` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) $Key_3$| | ![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) $Key_2$| `AND` | ![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) $Key_3$ | 
+|![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 1| `AND` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 2 || ![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 1 | `AND` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 3| | ![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 2| `AND` | ![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 3 | 
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 
 <center>
@@ -77,7 +77,7 @@ $\left[ Key_1 \space AND \space Key_2 \right] \space OR \space \left [ Key_1 \sp
 
 ##### Timelock Expires
 
-|![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) $Key_1$ | `OR` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) $Key_2$ | `OR` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) $Key_3$ | `AND` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/unlock.png) $Time \space Unlock$ |
+|![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 1 | `OR` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 2 | `OR` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 3 | `AND` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/unlock.png) Time Unlock |
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 
 <center>
