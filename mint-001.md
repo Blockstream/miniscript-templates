@@ -58,8 +58,8 @@ Below is a reference diagram on how the 3 Key Time Layered Multisig operates acr
 
 #### Layer 1
 
-| 3 Key Layered Timelock | Key 1 | Key 2 | Key 3 |  | Timelock |
-|:-------------|:-------------:|:---------------:|:-------------:|:-:|:-:|
+| 3 Key Layered Timelock | Key 1 | Key 2 | Key 3 | Timelock |
+|:-------------|:-------------:|:---------------:|:-------------:|:-:|
 |Key 1 + Key 2 + Lock | ![assets/key.png](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) | ![assets/key.png](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) | ![assets/key.png](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) | `AND` | ![assets/key.png](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/lock.png) |
 
 ##### Valid Spending Conditions
