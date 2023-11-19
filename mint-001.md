@@ -69,22 +69,18 @@ Below is a reference diagram on how the 3 Key Time Layered Multisig operates acr
 |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 1| `AND` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 2 || ![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 1 | `AND` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 3| | ![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 2| `AND` | ![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 3 | 
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 
-<center>
 
 $\left[ Key_1 \space AND \space Key_2 \right] \space OR \space \left [ Key_1 \space AND \space Key_3 \right] \space OR \space \left[ Key_2 \space AND \space Key_3 \right]$
 
-</center>
 
 ##### Timelock Expires
 
 |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 1 | `OR` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 2 | `OR` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/key.png) Key 3 | `AND` |![](https://raw.githubusercontent.com/bitcoincore-dev/miniscript-templates/main/assets/unlock.png) Time Unlock |
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 
-<center>
 
 $\left[ Key_1 \space OR \space Key_2 \space OR \space Key_3 \right]$ $\space AND \space$ $\left[ \space Time \space Unlock \space \right]$
 
-</center>
 
 ---
 
