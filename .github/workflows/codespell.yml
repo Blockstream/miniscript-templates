@@ -1,0 +1,56 @@
+# This is a basic workflow to help you get started with Actions
+name: codespell
+
+# Controls when the action will run.
+on: [push, pull_request]
+
+jobs:
+
+  ubuntu-site-matrix:
+    name: github-workspace
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - uses: styfle/cancel-workflow-action@0.11.0
+        if: ${{ !env.ACT }}
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v3
+        with:
+          depth: '2'
+          submodules: 'true'
+          set-safe-directory: 'true'
+      - name: printenv
+        run: |
+          printenv
+      - name: install-codespell-asciidoctor
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          sudo apt list --upgradable
+          sudo apt upgrade -y
+          sudo apt update -y
+          sudo apt install apt-utils asciidoctor python3-pip golang-go sed  -y
+          pip3 install -U codespell
+      - name: markdown-syntax
+        if: ${{ !env.ACT }}
+        run: |
+          git init
+          git grep -n --color $'\r' -- "*.md" && \
+          echo "^ Possible Windows style line ending detected. Please use Unix style line endings (\n)." && exit 0 || true
+          git grep -n --color ' $' -- "*.md" && echo "^ Trailing space detected at end of line. Please remove." && exit 0 || true
+          git grep  -n --color  $'\t' -- "*.md" && echo "^ Use of tabs detected. Please use space for indentation." && exit 0 || true
+          git grep -iE  -n --color '(^| )(\w+) \2(\.|,|:|;| |$)' -- "*.md" && \
+          echo "^ Detected lexical illusion in the form of a duplicated word. Please correct." && exit 0 || true
+          for FILE in $(git ls-files -- "*.md"); do if [[ $(tail -c1 $FILE) != "" ]]; then echo "File ${FILE} does not end with a newline character (\n)."; exit 0; fi; done
+          git grep "" -- "*.md" | uniq -c | grep -1 "^      [2-9] " | cut -b9- | sed 's/:$/:[more-than-one-blank-line-here-please-remove]/' | \
+          grep ":" && echo "^ Multiple blank lines detected. Please use only one blank line between paragraphs." && exit 0 || true
+      - name: codespell-md
+        if: ${{ !env.ACT }}
+        run: |
+          codespell --config .codespellrc --ignore-words .codespell-ignore $(git ls-files -- "*.md")
+      - name: codespell-html
+        if: ${{ !env.ACT }}
+        run: |
+          codespell --config .codespellrc --ignore-words .codespell-ignore $(git ls-files -- "*.html")
